@@ -30,7 +30,10 @@ ASCII.parse = function(b) {
 		var l = _g++;
 		var layerName = b.readString(b.readByte());
 		var depthOffset = b.readFloat();
-		var layer = { name : layerName, depthOffset : depthOffset, cells : [], alpha : 1, visible : true};
+		var alpha = b.readFloat();
+		var flags = b.readByte();
+		var visible = (flags & 1) > 0;
+		var layer = { name : layerName, depthOffset : depthOffset, cells : [], alpha : alpha, visible : visible};
 		layer.cells.length = width * height;
 		var _g2 = 0;
 		var _g3 = width * height;
@@ -39,16 +42,13 @@ ASCII.parse = function(b) {
 			var value = b.readUInt16();
 			var fgColor = b.readByte();
 			var bgColor = b.readByte();
-			var flags = b.readByte();
-			var xFlip = (flags & 1) > 0;
-			var yFlip = (flags & 2) > 0;
-			var dFlip = (flags & 4) > 0;
-			var invColors = (flags & 8) > 0;
+			var flags1 = b.readByte();
+			var xFlip = (flags1 & 1) > 0;
+			var yFlip = (flags1 & 2) > 0;
+			var dFlip = (flags1 & 4) > 0;
+			var invColors = (flags1 & 8) > 0;
 			layer.cells[c] = { value : value, fgColor : fgColor, bgColor : bgColor, xFlip : xFlip, yFlip : yFlip, dFlip : dFlip, invColors : invColors};
 		}
-		layer.alpha = b.readFloat();
-		var flags1 = b.readByte();
-		layer.visible = (flags1 & 1) > 0;
 		layers.push(layer);
 	}
 	return { rev : rev, name : name, width : width, height : height, charsetName : charsetName, paletteName : paletteName, layers : layers};
@@ -48507,9 +48507,11 @@ hxd_clipper__$Clipper_ClipperBase.prototype = {
 	}
 	,addPolygons: function(ppg,polyType) {
 		var result = false;
-		var _g = new hxd_impl_ArrayIterator_$h2d_$col_$IPolygon(ppg);
-		while(_g.i < _g.l) {
-			var p = _g.a[_g.i++];
+		var _g_i = 0;
+		var _g_a = ppg;
+		var _g_l = _g_a.length;
+		while(_g_i < _g_l) {
+			var p = _g_a[_g_i++];
 			if(this.addPolygon(p,polyType)) {
 				result = true;
 			}
@@ -50864,9 +50866,11 @@ hxd_clipper_Clipper.prototype = $extend(hxd_clipper__$Clipper_ClipperBase.protot
 		}
 	}
 	,reversePolygons: function(polys) {
-		var _g = new hxd_impl_ArrayIterator_$h2d_$col_$IPolygon(polys);
-		while(_g.i < _g.l) {
-			var p = _g.a[_g.i++];
+		var _g_i = 0;
+		var _g_a = polys;
+		var _g_l = _g_a.length;
+		while(_g_i < _g_l) {
+			var p = _g_a[_g_i++];
 			h2d_col_IPolygon.reverse(p);
 		}
 	}
@@ -51896,9 +51900,11 @@ hxd_clipper_ClipperOffset.prototype = {
 		}
 	}
 	,addPolygons: function(pols,joinType,endType) {
-		var _g = new hxd_impl_ArrayIterator_$h2d_$col_$IPolygon(pols);
-		while(_g.i < _g.l) {
-			var p = _g.a[_g.i++];
+		var _g_i = 0;
+		var _g_a = pols;
+		var _g_l = _g_a.length;
+		while(_g_i < _g_l) {
+			var p = _g_a[_g_i++];
 			this.addPolygon(p,joinType,endType);
 		}
 	}

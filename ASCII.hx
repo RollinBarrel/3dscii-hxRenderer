@@ -60,13 +60,17 @@ class ASCII {
         for (l in 0...layerCount) {
             var layerName = b.readString(b.readByte());
             var depthOffset = b.readFloat();
+            var alpha = b.readFloat();
+
+            var flags = b.readByte();
+            var visible = (flags & 1 << 0) > 0;
 
             var layer:LayerData = {
                 name: layerName,
                 depthOffset: depthOffset,
                 cells: [],
-                alpha: 1,
-                visible: true 
+                alpha: alpha,
+                visible: visible
             };
             layer.cells.resize(width * height);
 
@@ -90,11 +94,6 @@ class ASCII {
                     invColors: invColors
                 };
             }
-            
-            layer.alpha = b.readFloat();
-            
-            var flags = b.readByte();
-            layer.visible = (flags & 1 << 0) > 0;
 
             layers.push(layer);
         }
