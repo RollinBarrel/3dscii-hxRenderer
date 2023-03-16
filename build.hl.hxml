@@ -1,0 +1,6 @@
+-lib hlsdl
+-lib heaps
+-main Main
+
+-debug
+-hl build.hl

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="height=device-height, initial-scale=1.0">
+<title>3dscii-hxRenderer</title>
+<style>
+    html {
+        height: 100%;
+    }
+    body {
+        margin: 0px;
+        /* background-color: #000; */
+        width: 100%;
+        height: 100%;
+        font-family: Verdana;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #wrap {
+        display: flex;
+        flex-direction: column;
+    }
+    #centered {
+        display: flex;
+        justify-content: center;
+    }
+    #webgl {
+        display: none;
+    }
+    #output {
+        display: none;
+    }
+</style>
+</head>
+<body>
+    <div id="wrap">
+        <div>
+            <span id="tip">Loading...</span>
+        </div>
+        <div id="centered">
+            <img id="output" />
+            <canvas id="webgl"></canvas>
+        </div>
+        <div>
+            <input type="file" id="finput"/>
+        </div>
+    </div>
+    <script src="build.js"></script>
+</body>
+
+</html>
