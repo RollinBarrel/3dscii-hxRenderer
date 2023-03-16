@@ -1,6 +1,6 @@
 
 # 3DSCII-hxRenderer
-[Click here if you just want to use it!](link)
+[Click here if you just want to use it!](https://rollinbarrel.github.io/3dscii-hxRenderer/)
 
 [Heaps](https://github.com/HeapsIO/heaps)-based .3dscii file renderer (only js for now)
 
