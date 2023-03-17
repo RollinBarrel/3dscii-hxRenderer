@@ -141,7 +141,11 @@ class Main extends hxd.App {
             var x = 0;
             var y = 0;
             for (cell in layer.cells) {
-                var col = new h3d.Vector(1. / 255 * cell.fgColor, 1. / 255 * cell.bgColor, 0, 1);
+                var vIdx = cell.value < tiles.length ? cell.value : 0;
+                var bgIdx = cell.bgColor < palette.length ? cell.bgColor : 0;
+                var fgIdx = cell.fgColor < palette.length ? cell.bgColor : 0;
+
+                var col = new h3d.Vector(1. / 255 * fgIdx, 1. / 255 * bgIdx, 0, 1);
                 var xs = cell.xFlip ? -1 : 1;
                 var ys = cell.yFlip ? -1 : 1;
                 var rot = 0.;
@@ -150,7 +154,7 @@ class Main extends hxd.App {
                     xs = -xs;
                 }
 
-                @:privateAccess tg.content.addTransform((0.5 + x) * tiles[0].width, (0.5 + y) * tiles[0].height, xs, ys, rot, col, tiles[cell.value]);
+                @:privateAccess tg.content.addTransform((0.5 + x) * tiles[0].width, (0.5 + y) * tiles[0].height, xs, ys, rot, col, tiles[vIdx]);
 
                 x++;
                 if (x >= art.width) {
