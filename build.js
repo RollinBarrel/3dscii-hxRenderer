@@ -474,7 +474,10 @@ Main.prototype = $extend(hxd_App.prototype,{
 			while(_g2 < _g3.length) {
 				var cell = _g3[_g2];
 				++_g2;
-				var col = new h3d_Vector(0.00392156862745098 * cell.fgColor,0.00392156862745098 * cell.bgColor,0,1);
+				var vIdx = cell.value < this.tiles.length ? cell.value : 0;
+				var bgIdx = cell.bgColor < this.palette.length ? cell.bgColor : 0;
+				var fgIdx = cell.fgColor < this.palette.length ? cell.fgColor : 0;
+				var col = new h3d_Vector(0.00392156862745098 * fgIdx,0.00392156862745098 * bgIdx,0,1);
 				var xs = cell.xFlip ? -1 : 1;
 				var ys = cell.yFlip ? -1 : 1;
 				var rot = 0.;
@@ -482,7 +485,7 @@ Main.prototype = $extend(hxd_App.prototype,{
 					rot = -Math.PI / 2;
 					xs = -xs;
 				}
-				tg.content.addTransform((0.5 + x) * this.tiles[0].width,(0.5 + y) * this.tiles[0].height,xs,ys,rot,col,this.tiles[cell.value]);
+				tg.content.addTransform((0.5 + x) * this.tiles[0].width,(0.5 + y) * this.tiles[0].height,xs,ys,rot,col,this.tiles[vIdx]);
 				++x;
 				if(x >= this.art.width) {
 					++y;
@@ -584,20 +587,18 @@ Main.prototype = $extend(hxd_App.prototype,{
 		promise.then(function(buf) {
 			var data = haxe_io_Bytes.ofData(buf);
 			var res = hxd_res_Any.fromBytes("/palettes/" + _gthis.art.paletteName + ".png",data);
-			var pixels = res.toImage().getPixels();
+			var chunks = new format_png_Reader(new haxe_io_BytesInput(data,0,data.length)).read();
+			var pixels = format_png_Tools.extract32(chunks);
 			_gthis.palette = [0];
-			var _g = 0;
-			var _g1 = pixels.height;
-			while(_g < _g1) {
-				var y = _g++;
-				var _g2 = 0;
-				var _g3 = pixels.width;
-				while(_g2 < _g3) {
-					var x = _g2++;
-					var v = pixels.getPixel(x,y);
-					if(_gthis.palette.indexOf(v) == -1) {
-						_gthis.palette.push(v);
-					}
+			var pos = 0;
+			while(pos < pixels.length) {
+				var b = pixels.b[pos++];
+				var g = pixels.b[pos++];
+				var r = pixels.b[pos++];
+				var a = pixels.b[pos++];
+				var v = a << 24 | r << 16 | g << 8 | b;
+				if(_gthis.palette.indexOf(v) == -1) {
+					_gthis.palette.push(v);
 				}
 			}
 			_gthis.present();
