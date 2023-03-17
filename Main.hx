@@ -143,7 +143,7 @@ class Main extends hxd.App {
             for (cell in layer.cells) {
                 var vIdx = cell.value < tiles.length ? cell.value : 0;
                 var bgIdx = cell.bgColor < palette.length ? cell.bgColor : 0;
-                var fgIdx = cell.fgColor < palette.length ? cell.bgColor : 0;
+                var fgIdx = cell.fgColor < palette.length ? cell.fgColor : 0;
 
                 var col = new h3d.Vector(1. / 255 * fgIdx, 1. / 255 * bgIdx, 0, 1);
                 var xs = cell.xFlip ? -1 : 1;
