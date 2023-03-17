@@ -1,3 +1,4 @@
+import haxe.io.BytesInput;
 import js.html.Blob;
 import js.html.Event;
 import js.html.InputElement;
@@ -264,16 +265,25 @@ class Main extends hxd.App {
         promise.then((buf) -> {
             var data = Bytes.ofData(buf);
             var res = hxd.res.Any.fromBytes('/palettes/${art.paletteName}.png', data);
-            var pixels = res.toImage().getPixels();
-            
+
+            // heaps doesn't support some png formats
+            // we'll handle the palette pngs manually
+            var chunks = new format.png.Reader(new BytesInput(data, 0, data.length)).read();
+                
+            // png has embedded palette - but we can't use it!
+            // because it may have the colors in incorrect order
+            var pixels = format.png.Tools.extract32(chunks);
             palette = [0];
-            for (y in 0...pixels.height) {
-                for (x in 0...pixels.width) {
-                    var v = pixels.getPixel(x, y);
-                    if (palette.indexOf(v) == -1) {
-                        palette.push(v);
-                    }
-                }
+            var pos = 0;
+            while (pos < pixels.length) {
+                var b = pixels.get(pos++);
+                var g = pixels.get(pos++);
+                var r = pixels.get(pos++);
+                var a = pixels.get(pos++);
+
+                var v = a << 24 | r << 16 | g << 8 | b;
+                if (palette.indexOf(v) == -1)
+                    palette.push(v);
             }
 
             present();
